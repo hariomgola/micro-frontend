@@ -1,9 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, isDevMode } from '@angular/core';
 
 @Component({
   selector: 'app-side-nav',
   template: `<div class="sidebar">
-    <a *ngFor="let nav of sideNavigationData">{{ nav.label }}</a>
+    <a
+      *ngFor="let nav of sideNavigationData"
+      (click)="ontabNavigation(nav.dataEmit)"
+      >{{ nav.label }}</a
+    >
   </div>`,
   styles: [
     `
@@ -37,21 +41,49 @@ import { Component } from '@angular/core';
   ],
 })
 export class SideNavComponent {
-  sideNavigationData = [
-    {
-      label: 'Home',
-    },
-    {
-      label: 'News',
-    },
-    {
-      label: 'Contact',
-    },
-    {
-      label: 'About',
-    },
-    {
-      label: 'Made by Hari',
-    },
-  ];
+  sideNavigationData: any[] = [];
+
+  constructor() {
+    this.sideNavigationData = [
+      {
+        label: 'Home',
+        dataEmit: 'Home Microfront End',
+      },
+      {
+        label: 'News',
+        dataEmit: 'News Microfront End',
+      },
+      {
+        label: 'Contact',
+        dataEmit: 'Contact Microfront End',
+      },
+      {
+        label: 'About',
+        dataEmit: 'About Microfront End',
+      },
+      {
+        label: 'Made by Hari',
+        dataEmit: 'Made by Hari Microfront End',
+      },
+    ];
+    setTimeout(() => {
+      this.ontabNavigation('Made by Hari Microfront End');
+    }, 200);
+  }
+
+  ontabNavigation(dataEmit: String) {
+    const mfe_app_event = new CustomEvent('mfe-app', {
+      detail: { message: dataEmit, timestamp: new Date().toISOString() },
+      bubbles: true,
+      cancelable: true,
+    });
+    if (isDevMode()) {
+      console.clear();
+      console.log(
+        ' |> Custom Event from the host Application - ',
+        mfe_app_event
+      );
+    }
+    document.dispatchEvent(mfe_app_event);
+  }
 }

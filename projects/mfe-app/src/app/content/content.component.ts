@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, isDevMode } from '@angular/core';
 
 @Component({
   selector: 'app-content',
@@ -13,4 +13,14 @@ import { Component } from '@angular/core';
     `,
   ],
 })
-export class ContentComponent {}
+export class ContentComponent {
+  mfeHeader = isDevMode() ? 'Mfe - app' : '';
+  constructor() {
+    document.addEventListener('mfe-app', (data: any) => {
+      if (isDevMode()) {
+        console.log(' |> Data fetch to mfe-app - ', data);
+      }
+      this.mfeHeader = data.detail.message;
+    });
+  }
+}
