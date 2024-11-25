@@ -1,21 +1,48 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const { ModuleFederationPlugin } = require("webpack").container;
 
 module.exports = {
   entry: "./src/index.js",
   output: {
-    path: path.join(__dirname, "/dist"),
-    filename: "bundle.js",
+    path: path.resolve(__dirname, "dist"),
+    filename: "[name].[contenthash].js",
+    publicPath: "auto",
+  },
+  devServer: {
+    static: {
+      directory: path.join(__dirname, "dist"),
+    },
+    hot: true,
+    open: true,
+    port: 4300,
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: "./src/index.html",
     }),
+    new ReactRefreshWebpackPlugin(),
+    new ModuleFederationPlugin({
+      name: "reactMfe",
+      filename: "remoteEntry.js",
+      exposes: {
+        "./App": "./src/components/App",
+      },
+      shared: {
+        react: { singleton: true, eager: true, requiredVersion: "^18.3.1" },
+        "react-dom": {
+          singleton: true,
+          eager: true,
+          requiredVersion: "^18.3.1",
+        },
+      },
+    }),
   ],
   module: {
     rules: [
       {
-        test: /.js$/,
+        test: /\.jsx?$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
@@ -23,6 +50,10 @@ module.exports = {
             presets: ["@babel/preset-env", "@babel/preset-react"],
           },
         },
+      },
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"],
       },
     ],
   },

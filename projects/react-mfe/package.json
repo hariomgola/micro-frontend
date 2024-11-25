@@ -12,8 +12,10 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-refresh": "^0.14.2"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
