@@ -1,6 +1,5 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const { ModuleFederationPlugin } = require("webpack").container;
 
 module.exports = {
@@ -16,13 +15,12 @@ module.exports = {
     },
     hot: true,
     open: true,
-    port: 4300,
+    port: 4400,
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: "./src/index.html",
     }),
-    new ReactRefreshWebpackPlugin(),
     new ModuleFederationPlugin({
       name: "reactMfe",
       filename: "remoteEntry.js",
@@ -50,10 +48,6 @@ module.exports = {
             presets: ["@babel/preset-env", "@babel/preset-react"],
           },
         },
-      },
-      {
-        test: /\.css$/,
-        use: ["style-loader", "css-loader"],
       },
     ],
   },
